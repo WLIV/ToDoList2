@@ -35,19 +35,20 @@ public class FragmentCreationTask extends Fragment {
 
     //todo вынести все строки в ресурсы
 
-        private String resultCheck = "";
-        private  DatePickerDialog.OnDateSetListener setListener;
-        private TextView date;
-        private Button addNewTaskBtn, cancelBtn, doneBtn, deleteBtn;
-        private EditText description, title;
-        private View view;
-        private Calendar cal = Calendar.getInstance();
-        //jhgjhgjfg
-        private int myYear = cal.get(Calendar.YEAR);
-        private int myDay = cal.get(Calendar.DAY_OF_MONTH);
-        private int myMonth = cal.get(Calendar.MONTH);
-        private String dateSt = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear); //В будущем будет датой когда задача должна быть выполнена
-        private String currentDate = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear); //Текущая дата для определения времени когда задача была создана
+    private String resultCheck = "";
+    private DatePickerDialog.OnDateSetListener setListener;
+    private TextView date;
+    private Button addNewTaskBtn, cancelBtn, doneBtn, deleteBtn;
+    private EditText description, title;
+    private View view;
+    private Calendar cal = Calendar.getInstance();
+    //jhgjhgjfg
+    private int myYear = cal.get(Calendar.YEAR);
+    private int myDay = cal.get(Calendar.DAY_OF_MONTH);
+    private int myMonth = cal.get(Calendar.MONTH);
+    private String dateSt = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear); //В будущем будет датой когда задача должна быть выполнена
+    private String currentDate = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear); //Текущая дата для определения времени когда задача была создана
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,12 +64,26 @@ public class FragmentCreationTask extends Fragment {
         });
         if (resultCheck.isEmpty()) {
             init();
-        }
-        else {
+        } else {
 
-            }
+        }
 
         return view;
+    }
+
+    private void showInvalidDateDialog(){
+        final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
+        a_builder.setMessage(getString(R.string.invalid_date_description)).setCancelable(false).setPositiveButton(getString(R.string.change_it), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                showDialog();
+            }
+        });
+
+        AlertDialog alert = a_builder.create();
+        alert.setTitle(getString(R.string.invalid_date_title));
+        alert.show();
     }
     public void init() {
         date = view.findViewById(R.id.date_tv);
@@ -90,25 +105,15 @@ public class FragmentCreationTask extends Fragment {
                 }
             }
         });
-        setListener = new DatePickerDialog.OnDateSetListener()
-        {
+
+
+        setListener = new DatePickerDialog.OnDateSetListener() {
             //todo большие функции надо дробить на маленькие
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 if (year < myYear)
                 {
-                    final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
-                    a_builder.setMessage("The date you've chosen is invalid, please change it").setCancelable(false).setPositiveButton("Change It", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            showDialog();
-                        }
-                    });
 
-                    AlertDialog alert = a_builder.create();
-                    alert.setTitle("Invalid Date");
-                    alert.show();
                 }
                 else if(year > myYear)
                 {
@@ -120,18 +125,8 @@ public class FragmentCreationTask extends Fragment {
                 }
                 else {
                     if (month < myMonth) {
-                        final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
-                        a_builder.setMessage("The date you've chosen is invalid, please change it").setCancelable(false).setPositiveButton("Change It", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                showDialog();
-                            }
-                        });
 
-                        AlertDialog alert = a_builder.create();
-                        alert.setTitle("Invalid Date");
-                        alert.show();
+                        showInvalidDateDialog();
 
                     }
                     else if (month > myMonth)
@@ -145,18 +140,7 @@ public class FragmentCreationTask extends Fragment {
                     else {
                         if (dayOfMonth < myDay)
                         {
-                            final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
-                            a_builder.setMessage("The date you've chosen is invalid, please change it").setCancelable(false).setPositiveButton("Change It", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    showDialog();
-                                }
-                            });
-
-                            AlertDialog alert = a_builder.create();
-                            alert.setTitle("Invalid Date");
-                            alert.show();
+                            showInvalidDateDialog();
                         }
                         else
                         {

@@ -76,7 +76,10 @@ public class MainFragment extends Fragment implements CustomAdapter.onTaskListen
 
         //todo остальные типы
         NONE(0),
-        DEADLINE(1);
+        DEADLINE(1),
+        CREATION_DATE(2),
+        ;
+
 
         public final int position;
 
