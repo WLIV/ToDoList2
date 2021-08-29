@@ -18,15 +18,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     private Context context;
     private List<Task> taskList;
 
-    public CustomAdapter(Context context)
+    public CustomAdapter(Context context, onTaskListener onTaskListener)
     {
         this.context = context;
+        this.monTaskListener = onTaskListener;
     }
 
     //todo слушатель передовать в кнострукторе
-    public void setTaskList(List<Task> taskList, onTaskListener onTaskListener)
+    public void setTaskList(List<Task> taskList)
     {
-        this.monTaskListener = onTaskListener;
         this.taskList = taskList;
         notifyDataSetChanged();
     }

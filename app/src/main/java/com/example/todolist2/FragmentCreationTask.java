@@ -113,7 +113,7 @@ public class FragmentCreationTask extends Fragment {
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 if (year < myYear)
                 {
-
+                    showInvalidDateDialog();
                 }
                 else if(year > myYear)
                 {
