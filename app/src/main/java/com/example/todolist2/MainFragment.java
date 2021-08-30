@@ -3,6 +3,7 @@ package com.example.todolist2;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,11 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,7 +78,6 @@ public class MainFragment extends Fragment implements CustomAdapter.onTaskListen
 
     @Override
     public void setSortType(Sort sort, boolean hideDone) {
-       spinnerSort.setSelection(chosenPosition);
        hideDoneSwitch.setChecked(hideDone);
        presenter.getList();
     }
@@ -93,9 +97,11 @@ public class MainFragment extends Fragment implements CustomAdapter.onTaskListen
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_main, container, false);
-        presenter =  new TasksListPresenter(getContext()); //todo передать контекст
+
+        presenter =  new TasksListPresenter(getContext());
         presenter.attachView(this);
         presenter.getList();
+
         chosenPosition = presenter.getSavedPosition();
         hideDone = presenter.getSavedBoolean();
 
@@ -116,6 +122,7 @@ public class MainFragment extends Fragment implements CustomAdapter.onTaskListen
 
     private void init()
     {
+
         hideDoneSwitch = view.findViewById(R.id.hide_switch);
         hideDoneSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +169,7 @@ public class MainFragment extends Fragment implements CustomAdapter.onTaskListen
     public void onTaskClick(int position) {
         Task task = taskList.get(position);
         String clickName = task.taskTitle;
+
         //todo переделать на аргументы
         Bundle result = new Bundle();
         //todo df1 является константой, ее необходимо держать где-то в одном месте,

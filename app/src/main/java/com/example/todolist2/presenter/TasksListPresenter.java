@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.provider.ContactsContract;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.example.todolist2.Database;
 import com.example.todolist2.MainFragment;
 import com.example.todolist2.Task;
@@ -69,6 +72,7 @@ public class TasksListPresenter {
 
     public void attachView(TasksListView view){
         this.view = view;
+
     }
 
     public void detachView(){

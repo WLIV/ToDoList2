@@ -5,4 +5,20 @@
     <string name="invalid_date_title">Invalid Date</string>
     <string name="invalid_date_description">"The date you've chosen is invalid, please change it"</string>
     <string name="change_it">Change It</string>
+    <string name="missing_field">All of the fields should be filled in</string>
+    <string name="OK">OK</string>
+    <string name="please_fill_in">Please fill in the gaps</string>
+    <string name="add_new_task">Add New Task</string>
+    <string name="cancel">Cancel</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="finish_by">Finish By:</string>
+    <string name="done">done</string>
+    <string name="delete_task">Delete task</string>
+    <string name="sort_by">Sort By:</string>
+    <string name="deadline">Deadline</string>
+    <string name="status">Status</string>
+    <string name="created_on">Created On</string>
+    <string name="hide_completed_tasks">Hide Completed Tasks</string>
+    <string name="create_new">Create New Task</string>
 </resources>

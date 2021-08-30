@@ -1,6 +1,7 @@
 package com.example.todolist2;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,10 +23,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.navigation.Navigation;
 
+import com.example.todolist2.mvmViews.TaskCreateView;
+import com.example.todolist2.presenter.TaskCreationPresenter;
+
 import java.util.Calendar;
 import java.util.List;
 
-public class FragmentCreationTask extends Fragment {
+public class FragmentCreationTask extends Fragment implements TaskCreateView {
 
 //    сделаем это вместе
     //todo попробовать разделить по разным классам,
@@ -34,7 +38,80 @@ public class FragmentCreationTask extends Fragment {
 
 
     //todo вынести все строки в ресурсы
+    @Override
+    public void showLoading() {
 
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showTextMessage(String text) {
+
+    }
+
+    @Override
+    public String getTitleField() {
+        EditText title = view.findViewById(R.id.title_input);
+        return title.getText().toString();
+    }
+
+    @Override
+    public String getDescriptionField() {
+        EditText description = view.findViewById(R.id.description_text);
+        return description.getText().toString();
+    }
+
+    @Override
+    public String getDateField() {
+        TextView date = view.findViewById(R.id.date_tv);
+        return date.getText().toString();
+    }
+
+    @Override
+    public void showInvalidDateDialog()
+    {
+        a_builder = new AlertDialog.Builder(getContext());
+        a_builder.setMessage(getString(R.string.invalid_date_description)).setCancelable(false).setPositiveButton(getString(R.string.change_it), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                showDialog();
+            }
+        });
+
+        AlertDialog alert = a_builder.create();
+        alert.setTitle(getString(R.string.invalid_date_title));
+        alert.show();
+    }
+
+    @Override
+    public void setData(String titleSt, String descriptionSt, String dateSt) {
+        description.setText(descriptionSt);
+        title.setText(titleSt);
+        date.setText(dateSt);
+    }
+
+
+    public void showFillInTheGapsDialog(){
+        final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
+        a_builder.setMessage(R.string.missing_field).setCancelable(false).setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+            }
+        });
+
+        AlertDialog alert = a_builder.create();
+        alert.setTitle(R.string.please_fill_in);
+        alert.show();
+    }
+
+    private  AlertDialog.Builder a_builder;
+    private TaskCreationPresenter presenter;
     private String resultCheck = "";
     private DatePickerDialog.OnDateSetListener setListener;
     private TextView date;
@@ -42,7 +119,6 @@ public class FragmentCreationTask extends Fragment {
     private EditText description, title;
     private View view;
     private Calendar cal = Calendar.getInstance();
-    //jhgjhgjfg
     private int myYear = cal.get(Calendar.YEAR);
     private int myDay = cal.get(Calendar.DAY_OF_MONTH);
     private int myMonth = cal.get(Calendar.MONTH);
@@ -52,6 +128,9 @@ public class FragmentCreationTask extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        presenter = new TaskCreationPresenter(getContext());
+        presenter.attachView(this);
         view = inflater.inflate(R.layout.fragment_creation_task, container, false);
         getParentFragmentManager().setFragmentResultListener("taskTitle", this, new FragmentResultListener() {
             @Override
@@ -70,21 +149,12 @@ public class FragmentCreationTask extends Fragment {
 
         return view;
     }
-
-    private void showInvalidDateDialog(){
-        final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
-        a_builder.setMessage(getString(R.string.invalid_date_description)).setCancelable(false).setPositiveButton(getString(R.string.change_it), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                showDialog();
-            }
-        });
-
-        AlertDialog alert = a_builder.create();
-        alert.setTitle(getString(R.string.invalid_date_title));
-        alert.show();
+    @Override
+    public void onDestroyView() {
+        presenter.detachView();
+        super.onDestroyView();
     }
+
     public void init() {
         date = view.findViewById(R.id.date_tv);
         addNewTaskBtn = view.findViewById(R.id.add_new_task);
@@ -108,51 +178,18 @@ public class FragmentCreationTask extends Fragment {
 
 
         setListener = new DatePickerDialog.OnDateSetListener() {
-            //todo большие функции надо дробить на маленькие
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                if (year < myYear)
-                {
-                    showInvalidDateDialog();
-                }
-                else if(year > myYear)
-                {
-                    myYear = year;
-                    myMonth = month;
-                    myDay = dayOfMonth;
-                    dateSt = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear);
-                    date.setText(dateSt);
-                }
-                else {
-                    if (month < myMonth) {
-
-                        showInvalidDateDialog();
-
-                    }
-                    else if (month > myMonth)
-                    {
-                        myYear = year;
-                        myMonth = month;
-                        myDay = dayOfMonth;
-                        dateSt = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear);
-                        date.setText(dateSt);
-                    }
-                    else {
-                        if (dayOfMonth < myDay)
-                        {
-                            showInvalidDateDialog();
-                        }
-                        else
-                        {
-                            myYear = year;
-                            myMonth = month;
-                            myDay = dayOfMonth;
-                            dateSt = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear);
-                            date.setText(dateSt);
-                        }
-                    }
-
-                }
+               boolean validDate = presenter.onDateSet(year, month, dayOfMonth);
+                System.out.println(validDate);
+               if (validDate)
+               {
+                   dateSt = Integer.toString(dayOfMonth) + "/" + Integer.toString(month + 1) + "/" + Integer.toString(year);
+                   date.setText(dateSt);
+               }
+               else {
+                   showInvalidDateDialog();
+               }
             }
         };
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -164,27 +201,11 @@ public class FragmentCreationTask extends Fragment {
         addNewTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String titleSt, descriptionSt;
-                titleSt = title.getText().toString();
-                descriptionSt = description.getText().toString();
-                Database db = Database.getDbInstance(getContext());
-                List<Task> taskList = db.taskDao().getAll();
-                if (titleSt.isEmpty() || descriptionSt.isEmpty()){
-                    final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
-                    a_builder.setMessage("All of the fields should be filled in").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                        }
-                    });
-
-                    AlertDialog alert = a_builder.create();
-                    alert.setTitle("Please fill in the gaps");
-                    alert.show();
+                boolean check = presenter.insertData();
+                if (!check){
+                   showFillInTheGapsDialog();
                 }
                 else {
-                    Task newTask = new Task(taskList.size(), titleSt, currentDate, date.getText().toString(), descriptionSt, false);
-                    db.taskDao().insertAll(newTask);
                     Navigation.findNavController(view).navigate(R.id.action_fragmentCreationTask_to_mainFragment);
                 }
             }
@@ -202,11 +223,7 @@ public class FragmentCreationTask extends Fragment {
     public void editTask(String nameOfTask) {
         addNewTaskBtn = view.findViewById(R.id.add_new_task);
         addNewTaskBtn.setText("Save changes");
-        Database db = Database.getDbInstance(getContext());
-        Task task = db.taskDao().findByTitle(nameOfTask);
-        description.setText(task.description);
-        title.setText(task.taskTitle);
-        date.setText(task.deadline);
+        presenter.getCertainTask(nameOfTask);
         doneBtn = view.findViewById(R.id.done_button);
         deleteBtn = view.findViewById(R.id.delete_button);
         deleteBtn.setBackgroundColor(Color.RED);
@@ -216,27 +233,15 @@ public class FragmentCreationTask extends Fragment {
         addNewTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Database db = Database.getDbInstance(getContext());
                 String newName, newDescription, newDeadline;
                 newName = title.getText().toString();
                 newDescription = description.getText().toString();
                 newDeadline = date.getText().toString();
                 if (newName.isEmpty() || newDescription.isEmpty()){
-                    final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
-                    a_builder.setMessage("All of the fields should be filled in").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                        }
-                    });
-
-                    AlertDialog alert = a_builder.create();
-                    alert.setTitle("Please fill in the gaps");
-                    alert.show();
+                    showFillInTheGapsDialog();
                 }
                 else {
-                    Task updatedTask = new Task(task.taskId, newName, task.creationDate, newDeadline, newDescription, task.doneCheck);
-                    db.taskDao().updateAll(updatedTask);
+                    presenter.updateTask(newName, newDescription, newDeadline);
                     Navigation.findNavController(view).navigate(R.id.action_fragmentCreationTask_to_mainFragment);
                 }
             }
@@ -249,8 +254,7 @@ public class FragmentCreationTask extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        Database db = Database.getDbInstance(getContext());
-                        db.taskDao().delete(task);
+                        presenter.deleteTask();
                         Navigation.findNavController(view).navigate(R.id.action_fragmentCreationTask_to_mainFragment);
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -266,11 +270,11 @@ public class FragmentCreationTask extends Fragment {
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Database db = Database.getDbInstance(getContext());
-                Task doneTask = new Task(task.taskId, task.taskTitle, task.creationDate, task.deadline,task.description, true);
-                db.taskDao().updateAll(doneTask);
+                presenter.setTaskDone();
                 Navigation.findNavController(view).navigate(R.id.action_fragmentCreationTask_to_mainFragment);
             }
         });
     }
+
+
 }
