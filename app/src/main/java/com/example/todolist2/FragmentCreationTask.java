@@ -250,14 +250,14 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder a_builder = new AlertDialog.Builder(getContext());
-                a_builder.setMessage("Are you sure you want to delete this task?").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                a_builder.setMessage(R.string.are_you_sure).setCancelable(false).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
                         presenter.deleteTask();
                         Navigation.findNavController(view).navigate(R.id.action_fragmentCreationTask_to_mainFragment);
                     }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
