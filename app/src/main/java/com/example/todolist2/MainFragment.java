@@ -30,16 +30,14 @@ import com.example.todolist2.presenter.TasksListPresenter;
 import java.util.List;
 
 
-public class MainFragment extends Fragment implements CustomAdapter.onTaskListener, TasksListView {
+public class MainFragment extends Fragment implements TaskListAdapter.TaskListener, TasksListView {
     private Button createNewTaskBtn;
-    //todo плохой синтаксис, в джаве не используется _ в названии полей и классов
     private Spinner spinnerSort;
     private View view;
-    private CustomAdapter customAdapter;
+    private TaskListAdapter customAdapter;
     private static final String TEXT = "sharedPrefs";
     public static final String POSITION = "position";
     public static final String SWITCH = "switch";
-    //todo enum Sort
     private int chosenPosition;
     private Switch hideDoneSwitch;
     private boolean hideDone;
@@ -71,7 +69,7 @@ public class MainFragment extends Fragment implements CustomAdapter.onTaskListen
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
-        customAdapter = new CustomAdapter(getContext(), this);
+        customAdapter = new TaskListAdapter(getContext(), this);
         customAdapter.setTaskList(tasks);
         recyclerView.setAdapter(customAdapter);
     }
@@ -166,16 +164,16 @@ public class MainFragment extends Fragment implements CustomAdapter.onTaskListen
 
 
     @Override
-    public void onTaskClick(int position) {
-        Task task = taskList.get(position);
+    public void onTaskClick(Task task) {
+
         String clickName = task.taskTitle;
 
         //todo переделать на аргументы
         Bundle result = new Bundle();
         //todo df1 является константой, ее необходимо держать где-то в одном месте,
         // ну и нужно дать более осмысленное название
-        result.putString("df1",clickName);
-        getParentFragmentManager().setFragmentResult("taskTitle", result);
+        result.putParcelable("chosenTaskContent", task);
+        getParentFragmentManager().setFragmentResult("chosenTask", result);
         //todo аргументы в android navigation component
         Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_fragmentCreationTask);
     }

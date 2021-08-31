@@ -53,8 +53,8 @@ public class TaskCreationPresenter {
 
     }
 
-    public void getCertainTask(String taskName) {
-         chosenTask = db.taskDao().findByTitle(taskName);
+    public void getCertainTask(Task task) {
+         chosenTask = task;
         view.setData(chosenTask.taskTitle, chosenTask.description, chosenTask.deadline);
 
     }

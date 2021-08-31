@@ -20,8 +20,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.todolist2.mvmViews.TaskCreateView;
 import com.example.todolist2.presenter.TaskCreationPresenter;
@@ -31,13 +34,6 @@ import java.util.List;
 
 public class FragmentCreationTask extends Fragment implements TaskCreateView {
 
-//    сделаем это вместе
-    //todo попробовать разделить по разным классам,
-    // сейчас фрагмент и отображает данные,
-    // и записывает/читает из БД, и содержит какуе-ту логику
-
-
-    //todo вынести все строки в ресурсы
     @Override
     public void showLoading() {
 
@@ -112,7 +108,7 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
 
     private  AlertDialog.Builder a_builder;
     private TaskCreationPresenter presenter;
-    private String resultCheck = "";
+    private Task chosenTask;
     private DatePickerDialog.OnDateSetListener setListener;
     private TextView date;
     private Button addNewTaskBtn, cancelBtn, doneBtn, deleteBtn;
@@ -128,20 +124,19 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         presenter = new TaskCreationPresenter(getContext());
         presenter.attachView(this);
         view = inflater.inflate(R.layout.fragment_creation_task, container, false);
-        getParentFragmentManager().setFragmentResultListener("taskTitle", this, new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener("chosenTask", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
 
-                resultCheck = result.getString("df1");
-                editTask(resultCheck);
+                chosenTask = result.getParcelable("chosenTaskContent");
+                editTask(chosenTask);
 
             }
         });
-        if (resultCheck.isEmpty()) {
+        if (chosenTask == null) {
             init();
         } else {
 
@@ -220,10 +215,10 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
         datePickerDialog.show();
     }
 
-    public void editTask(String nameOfTask) {
+    public void editTask(Task chosenTask) {
         addNewTaskBtn = view.findViewById(R.id.add_new_task);
         addNewTaskBtn.setText("Save changes");
-        presenter.getCertainTask(nameOfTask);
+        presenter.getCertainTask(chosenTask);
         doneBtn = view.findViewById(R.id.done_button);
         deleteBtn = view.findViewById(R.id.delete_button);
         deleteBtn.setBackgroundColor(Color.RED);

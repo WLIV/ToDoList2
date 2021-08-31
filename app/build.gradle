@@ -1,7 +1,8 @@
 plugins {
     id 'com.android.application'
+    id 'androidx.navigation.safeargs'
 }
-
+apply plugin:'androidx.navigation.safeargs'
 android {
     compileSdk 30
 
@@ -49,6 +50,7 @@ dependencies {
 
         // optional - Paging 3 Integration
         implementation "androidx.room:room-paging:2.4.0-alpha04"
+
 
         
     }

@@ -38,6 +38,9 @@ public interface TaskDao
     @Query("SELECT * FROM task WHERE doneCheck LIKE :done")
     List<Task>getAllDone(boolean done);
 
+    @Query("SELECT * FROM task WHERE taskId LIKE :id")
+    Task findById(int id);
+
     @Query("DELETE FROM task")
     void deleteAll();
 
