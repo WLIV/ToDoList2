@@ -178,6 +178,10 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
         getParentFragmentManager().setFragmentResult("chosenTask", result);
         //todo аргументы в android navigation component
         Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_fragmentCreationTask);
+
+        //todo навигируйся через safeArgs
+//        NavDirections action = MainFragmentDirections.actionMainFragmentToFragmentCreationTask();
+//        Navigation.findNavController(view).navigate(action);
     }
 
 }
