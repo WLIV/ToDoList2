@@ -1,14 +1,8 @@
 package com.example.todolist2.presenter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.provider.ContactsContract;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.todolist2.Database;
-import com.example.todolist2.MainFragment;
 import com.example.todolist2.Task;
 import com.example.todolist2.data.SharedPrefsHolder;
 import com.example.todolist2.data.Sort;
@@ -54,6 +48,8 @@ public class TasksListPresenter {
         prefs.setBoolean(SWITCH, x);
     }
     public void getList(){
+        //todo defineSort может вернуть список элементов, поле taskList не нужно
+        //опять же, старайся не делать такие поля
         defineSort();
         view.showList(taskList);
     }

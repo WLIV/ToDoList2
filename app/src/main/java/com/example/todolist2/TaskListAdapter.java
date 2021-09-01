@@ -24,7 +24,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         this.mTaskListener = onTaskListener;
     }
 
-    //todo слушатель передовать в кнострукторе
+    //todo слушатель передавать в кнострукторе
+    //todo передавать список из TaskModel
     public void setTaskList(List<Task> taskList)
     {
         this.taskList = taskList;
@@ -51,8 +52,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
     public int getItemCount() {
         return this.taskList.size();
     }
-    public class MyViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener
-    {
+    //todo старайся придерживаться стиля джавы, первая фигурная скобка должна быть на одной строке
+    //пример на 57 строке
+    //исправь везде где увидишь
+    public class MyViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
+
         TaskListener TaskListener;
         TextView tvDoneCheck, tvTitle, tvDescription, tvDeadline, tvCreationDate;
         public MyViewHolder(View view, TaskListener TaskListener)
@@ -94,6 +98,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         }
 
 
+        //todo удалить, больше не нужно
         @Override
         public void onClick(View view)
         {

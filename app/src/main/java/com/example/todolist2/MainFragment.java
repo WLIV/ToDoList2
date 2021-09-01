@@ -1,9 +1,6 @@
 package com.example.todolist2;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +11,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,9 +28,13 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
     private Spinner spinnerSort;
     private View view;
     private TaskListAdapter customAdapter;
+
+    //todo старайся удалять код, который не нужен. Студия подсвечивает название методов или полей серым, если они не используются
     private static final String TEXT = "sharedPrefs";
     public static final String POSITION = "position";
     public static final String SWITCH = "switch";
+
+    //todo старайся отказываться от таких мутабельных полей
     private int chosenPosition;
     private Switch hideDoneSwitch;
     private boolean hideDone;
@@ -48,23 +45,26 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
 
     @Override
     public void showLoading() {
-
+        //todo добавить progerss bar, показвать его здесь
     }
 
     @Override
     public void hideLoading() {
-
+        //todo добавить progerss bar, скрывать его здесь
     }
 
     @Override
     public void showTextMessage(String text) {
-
+        //todo toast
     }
 
     @Override
     public void showList(List<Task> tasks) {
 
-        this.taskList = tasks;
+        this.taskList = tasks; //это не нужно
+        //todo здесь должен вызываться только customAdapter.setTaskList(tasks)
+        //инициализацию recyclerView обычно делают в методе onCreateView
+        //в общем, инициализацию вью производят один раз при создании
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
@@ -76,6 +76,7 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
 
     @Override
     public void setSortType(Sort sort, boolean hideDone) {
+        //todo переметр sort не нужен
        hideDoneSwitch.setChecked(hideDone);
        presenter.getList();
     }
@@ -83,6 +84,7 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
     @Override
     public void setCompletedTasks(Sort sort, boolean showCompletedTasks) {
         hideDoneSwitch.setChecked(showCompletedTasks);
+        //todo презентер сам может вызвать метод changeSort сразу после setCompletedTasks
         presenter.changeSort(sort, showCompletedTasks);
     }
 
