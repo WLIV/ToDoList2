@@ -1,8 +1,7 @@
-package com.example.todolist2.mvmViews;
+package com.example.todolist2.mvp.mvmViews;
 
-import com.example.todolist2.MainFragment;
-import com.example.todolist2.Task;
-import com.example.todolist2.data.Sort;
+import com.example.todolist2.data.local.database.entities.Task;
+import com.example.todolist2.features.taskList.data.Sort;
 
 import java.util.List;
 

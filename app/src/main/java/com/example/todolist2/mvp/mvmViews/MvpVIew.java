@@ -1,4 +1,4 @@
-package com.example.todolist2.mvmViews;
+package com.example.todolist2.mvp.mvmViews;
 
 public interface MvpVIew {
 

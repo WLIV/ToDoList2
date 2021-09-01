@@ -1,4 +1,4 @@
-package com.example.todolist2;
+package com.example.todolist2.features.taskList;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.todolist2.data.Sort;
-import com.example.todolist2.mvmViews.TasksListView;
-import com.example.todolist2.presenter.TasksListPresenter;
+import com.example.todolist2.R;
+import com.example.todolist2.data.local.database.entities.Task;
+import com.example.todolist2.features.taskList.data.Sort;
+import com.example.todolist2.mvp.mvmViews.TasksListView;
+import com.example.todolist2.mvp.presenters.TasksListPresenter;
 
 import java.util.List;
 

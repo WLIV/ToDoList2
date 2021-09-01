@@ -1,4 +1,4 @@
-package com.example.todolist2;
+package com.example.todolist2.features.taskList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.todolist2.R;
+import com.example.todolist2.data.local.database.entities.Task;
 
 import java.util.List;
 

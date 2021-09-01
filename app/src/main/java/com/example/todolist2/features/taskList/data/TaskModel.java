@@ -1,4 +1,4 @@
-package com.example.todolist2;
+package com.example.todolist2.features.taskList.data;
 
 public class TaskModel {
     private int taskIdModel;

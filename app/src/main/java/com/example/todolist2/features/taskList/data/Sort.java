@@ -1,4 +1,4 @@
-package com.example.todolist2.data;
+package com.example.todolist2.features.taskList.data;
 
 public enum Sort{
 

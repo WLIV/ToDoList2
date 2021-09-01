@@ -1,4 +1,4 @@
-package com.example.todolist2;
+package com.example.todolist2.data.local.database.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;

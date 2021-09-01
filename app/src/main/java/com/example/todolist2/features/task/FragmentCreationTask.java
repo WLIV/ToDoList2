@@ -1,7 +1,6 @@
-package com.example.todolist2;
+package com.example.todolist2.features.task;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -20,17 +19,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.todolist2.mvmViews.TaskCreateView;
-import com.example.todolist2.presenter.TaskCreationPresenter;
+import com.example.todolist2.R;
+import com.example.todolist2.data.local.database.entities.Task;
+import com.example.todolist2.mvp.mvmViews.TaskCreateView;
+import com.example.todolist2.mvp.presenters.TaskCreationPresenter;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class FragmentCreationTask extends Fragment implements TaskCreateView {
 

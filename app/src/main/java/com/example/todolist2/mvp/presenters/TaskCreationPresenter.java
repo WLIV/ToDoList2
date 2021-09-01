@@ -1,14 +1,12 @@
-package com.example.todolist2.presenter;
+package com.example.todolist2.mvp.presenters;
 
 import android.content.Context;
 
-import com.example.todolist2.Database;
-import com.example.todolist2.Task;
-import com.example.todolist2.mvmViews.TaskCreateView;
-import com.example.todolist2.mvmViews.TasksListView;
+import com.example.todolist2.data.local.database.Database;
+import com.example.todolist2.data.local.database.entities.Task;
+import com.example.todolist2.mvp.mvmViews.TaskCreateView;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class TaskCreationPresenter {
 

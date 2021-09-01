@@ -1,12 +1,12 @@
-package com.example.todolist2.presenter;
+package com.example.todolist2.mvp.presenters;
 
 import android.content.Context;
 
-import com.example.todolist2.Database;
-import com.example.todolist2.Task;
-import com.example.todolist2.data.SharedPrefsHolder;
-import com.example.todolist2.data.Sort;
-import com.example.todolist2.mvmViews.TasksListView;
+import com.example.todolist2.data.local.SharedPrefsHolder;
+import com.example.todolist2.data.local.database.Database;
+import com.example.todolist2.data.local.database.entities.Task;
+import com.example.todolist2.features.taskList.data.Sort;
+import com.example.todolist2.mvp.mvmViews.TasksListView;
 
 import java.util.List;
 
