@@ -24,6 +24,8 @@ import androidx.navigation.Navigation;
 
 import com.example.todolist2.R;
 import com.example.todolist2.data.local.database.entities.Task;
+import com.example.todolist2.features.taskList.MainFragment;
+import com.example.todolist2.features.taskList.data.TaskModel;
 import com.example.todolist2.mvp.mvmViews.TaskCreateView;
 import com.example.todolist2.mvp.presenters.TaskCreationPresenter;
 
@@ -83,6 +85,9 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
 
     @Override
     public void setData(String titleSt, String descriptionSt, String dateSt) {
+        description = view.findViewById(R.id.description_text);
+        title = view.findViewById(R.id.title_input);
+        date = view.findViewById(R.id.date_tv);
         description.setText(descriptionSt);
         title.setText(titleSt);
         date.setText(dateSt);
@@ -116,7 +121,7 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
     private int myDay = cal.get(Calendar.DAY_OF_MONTH);
     private int myMonth = cal.get(Calendar.MONTH);
     private String dateSt = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear); //В будущем будет датой когда задача должна быть выполнена
-    private String currentDate = Integer.toString(myDay) + "/" + Integer.toString(myMonth + 1) + "/" + Integer.toString(myYear); //Текущая дата для определения времени когда задача была создана
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -124,21 +129,17 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
         presenter = new TaskCreationPresenter(getContext());
         presenter.attachView(this);
         view = inflater.inflate(R.layout.fragment_creation_task, container, false);
-        getParentFragmentManager().setFragmentResultListener("chosenTask", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+        TaskModel chosenTaskModel = FragmentCreationTaskArgs.fromBundle(getArguments()).getChosenTask();
 
-                chosenTask = result.getParcelable("chosenTaskContent");
-                editTask(chosenTask);
-
-            }
-        });
-        if (chosenTask == null) {
+        if (chosenTaskModel == null)
+        {
             init();
-        } else {
-
         }
-
+        else
+        {
+            Task chosenTask = chosenTaskModel.toTask();
+            editTask(chosenTask);
+        }
         return view;
     }
     @Override
@@ -213,8 +214,15 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
     }
 
     public void editTask(Task chosenTask) {
+        cancelBtn = view.findViewById(R.id.backButton2);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.action_fragmentCreationTask_to_mainFragment);
+            }
+        });
         addNewTaskBtn = view.findViewById(R.id.add_new_task);
-        addNewTaskBtn.setText("Save changes");
+        addNewTaskBtn.setText(R.string.save_changes);
         presenter.getCertainTask(chosenTask);
         doneBtn = view.findViewById(R.id.done_button);
         deleteBtn = view.findViewById(R.id.delete_button);

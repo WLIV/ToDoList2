@@ -7,16 +7,17 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.todolist2.MainFragment"
+        android:name="com.example.todolist2.features.taskList.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_mainFragment_to_fragmentCreationTask"
-            app:destination="@id/fragmentCreationTask" />
+            app:destination="@id/fragmentCreationTask"
+            app:enterAnim="@anim/nav_default_pop_enter_anim" />
     </fragment>
     <fragment
         android:id="@+id/fragmentCreationTask"
-        android:name="com.example.todolist2.FragmentCreationTask"
+        android:name="com.example.todolist2.features.task.FragmentCreationTask"
         android:label="fragment_creation_task"
         tools:layout="@layout/fragment_creation_task" >
         <action
@@ -27,6 +28,11 @@
         <action
             android:id="@+id/action_fragmentCreationTask_to_mainFragment2"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="chosenTask"
+            app:argType="com.example.todolist2.features.taskList.data.TaskModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
 
     </fragment>
 </navigation>

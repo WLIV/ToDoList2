@@ -53,7 +53,10 @@ public class TaskCreationPresenter {
 
     public void getCertainTask(Task task) {
          chosenTask = task;
-        view.setData(chosenTask.taskTitle, chosenTask.description, chosenTask.deadline);
+         String title = chosenTask.taskTitle;
+         String description = chosenTask.description;
+         String deadline = chosenTask.deadline;
+         view.setData(title, description, deadline);
 
     }
 

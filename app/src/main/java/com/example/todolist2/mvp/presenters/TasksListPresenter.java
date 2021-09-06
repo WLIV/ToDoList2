@@ -6,12 +6,12 @@ import com.example.todolist2.data.local.SharedPrefsHolder;
 import com.example.todolist2.data.local.database.Database;
 import com.example.todolist2.data.local.database.entities.Task;
 import com.example.todolist2.features.taskList.data.Sort;
+import com.example.todolist2.features.taskList.data.TaskModel;
 import com.example.todolist2.mvp.mvmViews.TasksListView;
 
 import java.util.List;
 
 public class TasksListPresenter {
-    private List<Task> taskList;
     private Context context;
     private TasksListView view;
     private Sort sortChoice;
@@ -48,22 +48,26 @@ public class TasksListPresenter {
         prefs.setBoolean(SWITCH, x);
     }
     public void getList(){
-        //todo defineSort может вернуть список элементов, поле taskList не нужно
-        //опять же, старайся не делать такие поля
-        defineSort();
-        view.showList(taskList);
+        view.showLoading();
+        List<Task> taskList;
+        taskList = defineSort();
+        List<TaskModel> taskListModel = TaskModel.taskToTaskModel(taskList);
+        view.showList(taskListModel);
     }
 
     public void changeSort(Sort sort, boolean hideDone){
         sortChoice = sort;
         defineSort();
-        view.setSortType(sortChoice, hideDone);
+        view.setSortType( hideDone);
     }
 
     public void onHideCompletedTaskPressed(boolean hideCompletedTasks){
         prefs.setBoolean(SWITCH, hideCompletedTasks);
         hideDone = hideCompletedTasks;
-        view.setCompletedTasks(sortChoice, hideCompletedTasks);
+        changeSort(sortChoice, hideCompletedTasks);
+        saveSwitch(hideCompletedTasks);
+        view.setCompletedTasks(hideCompletedTasks);
+        defineSort();
     }
 
     public void attachView(TasksListView view){
@@ -75,30 +79,34 @@ public class TasksListPresenter {
         view = null;
     }
 
-    private void defineSort()
+    private List<Task> defineSort()
     {
+        List<Task> taskList;
         switch (sortChoice) {
+            default:
+                taskList = loadTaskList();
+                break;
             case CREATION_DATE:
-                loadTaskList();
+                taskList = loadTaskList();
                 break;
             case DEADLINE:
-                sortByDeadline();
+                taskList = sortByDeadline();
                 break;
             case STATUS:
-                sortByDone();
+                taskList = sortByDone();
                 break;
             case TITLE:
-                sortByTitle();
+                taskList = sortByTitle();
                 break;
         }
-
+        return taskList;
     }
 
 
 
-    private void sortByTitle()
+    private List<Task> sortByTitle()
     {
-
+        List<Task> taskList;
         if (!hideDone) {
 
             taskList = db.taskDao().orderByTitle();
@@ -109,13 +117,13 @@ public class TasksListPresenter {
             taskList = db.taskDao().orderByTitleDone(false);
 
         }
-
+        return taskList;
 
     }
 
-    private void sortByDeadline()
+    private List<Task> sortByDeadline()
     {
-
+        List<Task> taskList;
         if (!hideDone) {
 
             taskList = db.taskDao().orderByDeadline();
@@ -126,12 +134,12 @@ public class TasksListPresenter {
             taskList = db.taskDao().orderByDeadlineDone(false);
 
         }
-
+        return taskList;
     }
 
-    private void sortByDone()
+    private List<Task> sortByDone()
     {
-
+        List<Task> taskList;
         if (!hideDone) {
 
             taskList = db.taskDao().orderByDone();
@@ -143,12 +151,12 @@ public class TasksListPresenter {
 
         }
 
-
+        return taskList;
 
     }
-    private void loadTaskList()
+    private List<Task> loadTaskList()
     {
-
+        List<Task> taskList;
         if (!hideDone) {
             taskList = db.taskDao().getAll();
 
@@ -156,5 +164,6 @@ public class TasksListPresenter {
         else{
             taskList = db.taskDao().getAllDone(false);
         }
+        return taskList;
     }
 }

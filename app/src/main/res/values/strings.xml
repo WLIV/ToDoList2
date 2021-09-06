@@ -25,5 +25,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="in_progress">In Progress</string>
+    <string name="save_changes">Save changes</string>
 
 </resources>

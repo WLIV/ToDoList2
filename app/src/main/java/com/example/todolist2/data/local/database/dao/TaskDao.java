@@ -7,6 +7,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.todolist2.data.local.database.entities.Task;
+import com.example.todolist2.features.taskList.data.TaskModel;
 
 import java.util.List;
 
@@ -15,9 +16,6 @@ public interface TaskDao
 {
     @Query("SELECT * FROM task")
     List<Task>getAll();
-
-    @Query("SELECT * FROM task WHERE title LIKE :name")
-    Task findByTitle(String name);
 
     @Query("SELECT * FROM task ORDER BY doneCheck")
     List<Task>orderByDone();
@@ -39,9 +37,6 @@ public interface TaskDao
 
     @Query("SELECT * FROM task WHERE doneCheck LIKE :done")
     List<Task>getAllDone(boolean done);
-
-    @Query("SELECT * FROM task WHERE taskId LIKE :id")
-    Task findById(int id);
 
     @Query("DELETE FROM task")
     void deleteAll();

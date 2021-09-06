@@ -11,26 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todolist2.R;
 import com.example.todolist2.data.local.database.entities.Task;
+import com.example.todolist2.features.taskList.data.TaskModel;
 
 import java.util.List;
-
-//todo переименовать в TaskListAdapter
-public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyViewHolder>
-{
+public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyViewHolder> {
     private TaskListener mTaskListener;
     private Context context;
-    private List<Task> taskList;
+    private List<TaskModel> taskList;
 
-    public TaskListAdapter(Context context, TaskListener onTaskListener)
-    {
+    public TaskListAdapter(Context context, TaskListener onTaskListener) {
         this.context = context;
         this.mTaskListener = onTaskListener;
     }
 
-    //todo слушатель передавать в кнострукторе
-    //todo передавать список из TaskModel
-    public void setTaskList(List<Task> taskList)
-    {
+    public void setTaskList(List<TaskModel> taskList) {
         this.taskList = taskList;
         notifyDataSetChanged();
     }
@@ -46,24 +40,19 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
         holder.bind(taskList.get(position));
     }
 
-    public interface TaskListener
-    {
-   void onTaskClick(Task task);
+    public interface TaskListener {
+        void onTaskClick(TaskModel task);
     }
 
     @Override
     public int getItemCount() {
         return this.taskList.size();
     }
-    //todo старайся придерживаться стиля джавы, первая фигурная скобка должна быть на одной строке
-    //пример на 57 строке
-    //исправь везде где увидишь
-    public class MyViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyViewHolder extends  RecyclerView.ViewHolder {
 
         TaskListener TaskListener;
         TextView tvDoneCheck, tvTitle, tvDescription, tvDeadline, tvCreationDate;
-        public MyViewHolder(View view, TaskListener TaskListener)
-        {
+        public MyViewHolder(View view, TaskListener TaskListener) {
 
             super(view);
             tvTitle = view.findViewById(R.id.tvTitle);
@@ -80,17 +69,17 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
             });
         }
 
-        public void bind(Task task){
-            tvCreationDate.setText(task.creationDate);
-            tvDeadline.setText(task.deadline);
-            if (!task.doneCheck) {
+        public void bind(TaskModel task){
+            tvCreationDate.setText(task.getTaskCreationDate());
+            tvDeadline.setText(task.getTaskDeadline());
+            if (!task.getTaskStatus()) {
                 tvDoneCheck.setText(R.string.in_progress);
             }
             else {
                tvDoneCheck.setText(R.string.done);
             }
-           tvDescription.setText(task.description);
-            tvTitle.setText(task.taskTitle);
+            tvDescription.setText(task.getTaskDescription());
+            tvTitle.setText(task.getTaskTitle());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,14 +88,5 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.MyView
                 }
             });
         }
-
-
-        //todo удалить, больше не нужно
-        @Override
-        public void onClick(View view)
-        {
-            TaskListener.onTaskClick(taskList.get(getAdapterPosition()));
-        }
-
     }
 }
