@@ -18,9 +18,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.example.todolist2.R;
-import com.example.todolist2.data.local.database.entities.Task;
 import com.example.todolist2.features.taskList.data.Sort;
 import com.example.todolist2.features.taskList.data.TaskModel;
 import com.example.todolist2.mvp.mvmViews.TasksListView;
@@ -60,6 +58,7 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
     public void showList(List<TaskModel> tasks) {
 
         customAdapter.setTaskList(tasks);
+        //todo hideLoading должен вызывать презентер
         hideLoading();
 
     }

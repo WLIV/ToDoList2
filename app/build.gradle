@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'androidx.navigation.safeargs'
 }
+//todo сделай как сверху
 apply plugin:'androidx.navigation.safeargs'
 android {
     compileSdk 30
@@ -29,36 +30,57 @@ android {
 }
 
 dependencies {
-    dependencies {
 
-        def room_version = "2.3.0"
+    //todo второй блок dependencies избыточен, rxJava не используешь, тем более подключаешь сразу две версии - 2 и 3
+    // старайся подключать только то, что используешь. Чем больше зависимостей, тем больше билдится проект и тем больше весит apk файл
+    // удалил лишнее, удали закоментированный код
+//    dependencies {
+//
+//        def room_version = "2.3.0"
+//
+//        implementation "androidx.room:room-runtime:$room_version"
+//        annotationProcessor "androidx.room:room-compiler:$room_version"
+//
+//        // optional - RxJava2 support for Room
+//        implementation "androidx.room:room-rxjava2:$room_version"
+//
+//        // optional - RxJava3 support for Room
+//        implementation "androidx.room:room-rxjava3:$room_version"
+//
+//        // optional - Guava support for Room, including Optional and ListenableFuture
+//        implementation "androidx.room:room-guava:$room_version"
+//
+//        // optional - Test helpers
+//        testImplementation "androidx.room:room-testing:$room_version"
+//
+//        // optional - Paging 3 Integration
+//        implementation "androidx.room:room-paging:2.4.0-alpha04"
+//
+//
+//    }
+//
+//    implementation 'androidx.appcompat:appcompat:1.3.1'
+//    implementation 'com.google.android.material:material:1.4.0'
+//    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+//    implementation 'androidx.navigation:navigation-fragment:2.3.5'
+//    implementation 'androidx.navigation:navigation-ui:2.3.5'
+//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+//    testImplementation 'junit:junit:4.+'
+//    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-        implementation "androidx.room:room-runtime:$room_version"
-        annotationProcessor "androidx.room:room-compiler:$room_version"
-
-        // optional - RxJava2 support for Room
-        implementation "androidx.room:room-rxjava2:$room_version"
-
-        // optional - RxJava3 support for Room
-        implementation "androidx.room:room-rxjava3:$room_version"
-
-        // optional - Guava support for Room, including Optional and ListenableFuture
-        implementation "androidx.room:room-guava:$room_version"
-
-        // optional - Test helpers
-        testImplementation "androidx.room:room-testing:$room_version"
-
-        // optional - Paging 3 Integration
-        implementation "androidx.room:room-paging:2.4.0-alpha04"
-        
-        
-    }
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+
+    //navigation
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

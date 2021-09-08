@@ -51,6 +51,8 @@ public class TaskCreationPresenter {
 
     }
 
+    //todo методы с названием "get" должны возвращать что-то
+    //сейчас мало того, что не возвращает, так еще и принимает некий таск
     public void getCertainTask(Task task) {
          chosenTask = task;
          String title = chosenTask.taskTitle;

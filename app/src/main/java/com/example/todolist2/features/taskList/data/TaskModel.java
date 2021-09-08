@@ -24,6 +24,10 @@ public class TaskModel implements Parcelable {
         this.description = description;
     }
 
+    //todo для этого делаю отдельные классы-конвертеры, содержащие статические методы,
+    // которые преобразуют один класс в другой
+    // и фигурные скобки всегда ставь в едином стиле: первая на строке с сигнатурой, вторая после кода метода
+    // пример - public TaskModel на 18 строке
     public TaskModel(Task task)
     {
         this.taskIdModel = task.taskId;

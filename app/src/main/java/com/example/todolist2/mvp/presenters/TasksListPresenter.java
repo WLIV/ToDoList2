@@ -30,9 +30,11 @@ public class TasksListPresenter {
         sortChoice = Sort.values()[prefs.getInt(POSITION)];
     }
     public int getSavedPosition() {
-        int x = prefs.getInt(POSITION);
-        return x;
+        //todo можно сразу вернуть значение, исправь у getSavedBoolean
+        return prefs.getInt(POSITION);
     }
+
+    //todo странное название, о каком boolean идет речь? Лучше назвать isSwitchEnabled или что-то такое
     public boolean getSavedBoolean() {
         boolean x = prefs.getBoolean(SWITCH);
         return x;
@@ -49,10 +51,13 @@ public class TasksListPresenter {
     }
     public void getList(){
         view.showLoading();
-        List<Task> taskList;
-        taskList = defineSort();
-        List<TaskModel> taskListModel = TaskModel.taskToTaskModel(taskList);
-        view.showList(taskListModel);
+//        List<Task> taskList;
+//        taskList = defineSort();
+//        List<TaskModel> taskListModel = TaskModel.taskToTaskModel(taskList);
+//        List<TaskModel> taskListModel = TaskModel.taskToTaskModel(defineSort());
+        //todo можно написать в одну строчку и не создавать поля сверху
+        // закоментированный код удали
+        view.showList(TaskModel.taskToTaskModel(defineSort()));
     }
 
     public void changeSort(Sort sort, boolean hideDone){
