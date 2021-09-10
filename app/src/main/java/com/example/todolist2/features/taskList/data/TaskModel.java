@@ -15,7 +15,8 @@ public class TaskModel implements Parcelable {
 
 
 
-    public TaskModel(int taskId, String taskTitle, String creationDate, String deadline, String description, boolean doneCheck) {
+    public TaskModel(int taskId, String taskTitle, String creationDate, String deadline,
+                     String description, boolean doneCheck) {
         this.taskIdModel = taskId;
         this.taskTitle = taskTitle;
         this.creationDate = creationDate;
@@ -24,19 +25,6 @@ public class TaskModel implements Parcelable {
         this.description = description;
     }
 
-    //todo для этого делаю отдельные классы-конвертеры, содержащие статические методы,
-    // которые преобразуют один класс в другой
-    // и фигурные скобки всегда ставь в едином стиле: первая на строке с сигнатурой, вторая после кода метода
-    // пример - public TaskModel на 18 строке
-    public TaskModel(Task task)
-    {
-        this.taskIdModel = task.taskId;
-        this.taskTitle = task.taskTitle;
-        this.creationDate = task.creationDate;
-        this.deadline= task.deadline;
-        this.doneCheck = task.doneCheck;
-        this.description = task.description;
-    }
 
     protected TaskModel(Parcel in) {
         taskIdModel = in.readInt();
@@ -59,21 +47,9 @@ public class TaskModel implements Parcelable {
         }
     };
 
-    public static List<TaskModel> taskToTaskModel(List<Task> taskList){
-        List<TaskModel> taskListModel = new ArrayList<>();
-        for (int i = 0; i < taskList.size(); i++)
-        {
-            TaskModel taskModel = new TaskModel(taskList.get(i));
-            taskListModel.add(taskModel);
-        }
-        return taskListModel;
-    }
 
-    public Task toTask ()
-    {
-        Task task = new Task(taskIdModel, taskTitle, creationDate, deadline, description, doneCheck);
-        return task;
-    }
+
+
 
     public int getId() {
         return taskIdModel;

@@ -2,6 +2,7 @@ package com.example.todolist2.mvp.presenters;
 
 import android.content.Context;
 
+import com.example.todolist2.R;
 import com.example.todolist2.data.local.database.Database;
 import com.example.todolist2.data.local.database.entities.Task;
 import com.example.todolist2.mvp.mvmViews.TaskCreateView;
@@ -32,44 +33,45 @@ public class TaskCreationPresenter {
     public void detachView(){
         view = null;
     }
-    public boolean insertData(){
-        String taskTitle = view.getTitleField();
-        String taskDescription = view.getDescriptionField();
-        String taskDeadline = view.getDateField();
+    public boolean insertData(String taskTitle, String taskDescription, String taskDeadline){
+        view.showLoading();
         boolean doneCheck = false;
         if (taskTitle.isEmpty() || taskDescription.isEmpty())
         {
+            view.hideLoading();
             return false;
         }
         else
             {
                 Task newTask = new Task(0, taskTitle, currentDate, taskDeadline, taskDescription, doneCheck);
                 db.taskDao().insertAll(newTask);
+                view.hideLoading();
+                view.showTextMessage(context.getString(R.string.task_added));
                 return true;
+
             }
 
 
     }
 
-    //todo методы с названием "get" должны возвращать что-то
-    //сейчас мало того, что не возвращает, так еще и принимает некий таск
-    public void getCertainTask(Task task) {
+
+    public void setCertainTaskData(Task task) {
+        view.showLoading();
          chosenTask = task;
          String title = chosenTask.taskTitle;
          String description = chosenTask.description;
          String deadline = chosenTask.deadline;
          view.setData(title, description, deadline);
+         view.hideLoading();
 
     }
 
     public boolean onDateSet(int year, int month, int dayOfMonth) {
-        if (year < myYear)
-        {
+        if (year < myYear) {
 
             return false;
         }
-        else if(year > myYear)
-        {
+        else if(year > myYear) {
             return true;
         }
         else {
@@ -79,18 +81,15 @@ public class TaskCreationPresenter {
                 return false;
 
             }
-            else if (month > myMonth)
-            {
+            else if (month > myMonth) {
                 return true;
             }
             else {
-                if (dayOfMonth < myDay)
-                {
+                if (dayOfMonth < myDay) {
 
                     return false;
                 }
-                else
-                {
+                else {
                     return true;
                 }
             }
@@ -100,18 +99,26 @@ public class TaskCreationPresenter {
     }
 
     public void updateTask(String newName, String newDescription, String newDeadline) {
+        view.showLoading();
         Task updatedTask = new Task(chosenTask.taskId, newName,chosenTask.creationDate, newDeadline,newDescription, chosenTask.doneCheck);
         db.taskDao().updateAll(updatedTask);
+        view.showTextMessage(context.getString(R.string.task_updated));
+        view.hideLoading();
     }
 
     public void deleteTask() {
-
+        view.showLoading();
         db.taskDao().delete(chosenTask);
+        view.hideLoading();
+        view.showTextMessage(context.getString(R.string.task_deleted));
     }
 
     public void setTaskDone() {
+        view.showLoading();
         Task task = new Task(chosenTask.taskId, chosenTask.taskTitle, chosenTask.creationDate, chosenTask.deadline, chosenTask.description, true);
         db.taskDao().updateAll(task);
+        view.hideLoading();
+        view.showTextMessage(context.getString(R.string.task_set_done));
 
     }
 }

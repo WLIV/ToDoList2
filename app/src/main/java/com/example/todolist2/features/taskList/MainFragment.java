@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
@@ -51,15 +52,14 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
 
     @Override
     public void showTextMessage(String text) {
-        //todo toast
+        Toast toast = Toast.makeText(getContext(), text, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     @Override
     public void showList(List<TaskModel> tasks) {
 
         customAdapter.setTaskList(tasks);
-        //todo hideLoading должен вызывать презентер
-        hideLoading();
 
     }
 
@@ -140,7 +140,7 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
 
                 presenter.savePosition(position);
                 Sort sort = Sort.values()[position];
-                presenter.changeSort(sort, presenter.getSavedBoolean());
+                presenter.changeSort(sort, presenter.getSwitchSavedPostion());
             }
 
             @Override

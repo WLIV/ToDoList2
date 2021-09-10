@@ -2,6 +2,7 @@ package com.example.todolist2.mvp.presenters;
 
 import android.content.Context;
 
+import com.example.todolist2.convertors.TasksConverter;
 import com.example.todolist2.data.local.SharedPrefsHolder;
 import com.example.todolist2.data.local.database.Database;
 import com.example.todolist2.data.local.database.entities.Task;
@@ -30,14 +31,14 @@ public class TasksListPresenter {
         sortChoice = Sort.values()[prefs.getInt(POSITION)];
     }
     public int getSavedPosition() {
-        //todo можно сразу вернуть значение, исправь у getSavedBoolean
+
         return prefs.getInt(POSITION);
     }
 
-    //todo странное название, о каком boolean идет речь? Лучше назвать isSwitchEnabled или что-то такое
-    public boolean getSavedBoolean() {
-        boolean x = prefs.getBoolean(SWITCH);
-        return x;
+
+    public boolean getSwitchSavedPostion() {
+
+        return prefs.getBoolean(SWITCH);
     }
 
     public void savePosition(int position)
@@ -51,13 +52,8 @@ public class TasksListPresenter {
     }
     public void getList(){
         view.showLoading();
-//        List<Task> taskList;
-//        taskList = defineSort();
-//        List<TaskModel> taskListModel = TaskModel.taskToTaskModel(taskList);
-//        List<TaskModel> taskListModel = TaskModel.taskToTaskModel(defineSort());
-        //todo можно написать в одну строчку и не создавать поля сверху
-        // закоментированный код удали
-        view.showList(TaskModel.taskToTaskModel(defineSort()));
+        view.showList(TasksConverter.taskToTaskModel(defineSort()));
+        view.hideLoading();
     }
 
     public void changeSort(Sort sort, boolean hideDone){

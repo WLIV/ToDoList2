@@ -13,7 +13,9 @@ import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -23,6 +25,7 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.navigation.Navigation;
 
 import com.example.todolist2.R;
+import com.example.todolist2.convertors.TasksConverter;
 import com.example.todolist2.data.local.database.entities.Task;
 import com.example.todolist2.features.taskList.MainFragment;
 import com.example.todolist2.features.taskList.data.TaskModel;
@@ -32,39 +35,23 @@ import com.example.todolist2.mvp.presenters.TaskCreationPresenter;
 import java.util.Calendar;
 
 public class FragmentCreationTask extends Fragment implements TaskCreateView {
-
+private ProgressBar progressBar;
     @Override
     public void showLoading() {
-
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showTextMessage(String text) {
-
+        Toast toast = Toast.makeText(getContext(), text, Toast.LENGTH_LONG);
+        toast.show();
     }
 
-    @Override
-    public String getTitleField() {
-        EditText title = view.findViewById(R.id.title_input);
-        return title.getText().toString();
-    }
-
-    @Override
-    public String getDescriptionField() {
-        EditText description = view.findViewById(R.id.description_text);
-        return description.getText().toString();
-    }
-
-    @Override
-    public String getDateField() {
-        TextView date = view.findViewById(R.id.date_tv);
-        return date.getText().toString();
-    }
 
     @Override
     public void showInvalidDateDialog()
@@ -129,6 +116,7 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
         presenter = new TaskCreationPresenter(getContext());
         presenter.attachView(this);
         view = inflater.inflate(R.layout.fragment_creation_task, container, false);
+        progressBar = view.findViewById(R.id.progressBarCreationTask);
         TaskModel chosenTaskModel = FragmentCreationTaskArgs.fromBundle(getArguments()).getChosenTask();
 
         if (chosenTaskModel == null)
@@ -137,7 +125,7 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
         }
         else
         {
-            Task chosenTask = chosenTaskModel.toTask();
+            Task chosenTask = TasksConverter.toTask(chosenTaskModel);
             editTask(chosenTask);
         }
         return view;
@@ -149,6 +137,7 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
     }
 
     public void init() {
+        progressBar.setVisibility(View.INVISIBLE);
         date = view.findViewById(R.id.date_tv);
         addNewTaskBtn = view.findViewById(R.id.add_new_task);
         cancelBtn = view.findViewById(R.id.backButton2);
@@ -194,7 +183,7 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
         addNewTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean check = presenter.insertData();
+                boolean check = presenter.insertData(title.getText().toString(), description.getText().toString(), dateSt);
                 if (!check){
                    showFillInTheGapsDialog();
                 }
@@ -223,7 +212,7 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
         });
         addNewTaskBtn = view.findViewById(R.id.add_new_task);
         addNewTaskBtn.setText(R.string.save_changes);
-        presenter.getCertainTask(chosenTask);
+        presenter.setCertainTaskData(chosenTask);
         doneBtn = view.findViewById(R.id.done_button);
         deleteBtn = view.findViewById(R.id.delete_button);
         deleteBtn.setBackgroundColor(Color.RED);
