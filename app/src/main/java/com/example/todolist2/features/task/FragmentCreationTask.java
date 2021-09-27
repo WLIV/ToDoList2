@@ -17,17 +17,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.navigation.Navigation;
 
 import com.example.todolist2.R;
 import com.example.todolist2.convertors.TasksConverter;
 import com.example.todolist2.data.local.database.entities.Task;
-import com.example.todolist2.features.taskList.MainFragment;
 import com.example.todolist2.features.taskList.data.TaskModel;
 import com.example.todolist2.mvp.mvmViews.TaskCreateView;
 import com.example.todolist2.mvp.presenters.TaskCreationPresenter;
@@ -35,7 +32,9 @@ import com.example.todolist2.mvp.presenters.TaskCreationPresenter;
 import java.util.Calendar;
 
 public class FragmentCreationTask extends Fragment implements TaskCreateView {
-private ProgressBar progressBar;
+
+    private ProgressBar progressBar;
+
     @Override
     public void showLoading() {
         progressBar.setVisibility(View.VISIBLE);

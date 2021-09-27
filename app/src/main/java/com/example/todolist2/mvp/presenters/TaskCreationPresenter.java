@@ -33,23 +33,20 @@ public class TaskCreationPresenter {
     public void detachView(){
         view = null;
     }
+
     public boolean insertData(String taskTitle, String taskDescription, String taskDeadline){
         view.showLoading();
         boolean doneCheck = false;
-        if (taskTitle.isEmpty() || taskDescription.isEmpty())
-        {
+        if (taskTitle.isEmpty() || taskDescription.isEmpty()) {
             view.hideLoading();
             return false;
+        } else {
+            Task newTask = new Task(0, taskTitle, currentDate, taskDeadline, taskDescription, doneCheck);
+            db.taskDao().insertAll(newTask);
+            view.hideLoading();
+            view.showTextMessage(context.getString(R.string.task_added));
+            return true;
         }
-        else
-            {
-                Task newTask = new Task(0, taskTitle, currentDate, taskDeadline, taskDescription, doneCheck);
-                db.taskDao().insertAll(newTask);
-                view.hideLoading();
-                view.showTextMessage(context.getString(R.string.task_added));
-                return true;
-
-            }
 
 
     }
