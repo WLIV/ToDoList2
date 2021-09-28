@@ -12,7 +12,8 @@ public class Task
 {
 
 
-    public Task(int taskId, String taskTitle, String creationDate, String deadline, String description, boolean doneCheck) {
+    public Task(int taskId, String taskTitle, String creationDate, String deadline,
+                String description, boolean doneCheck) {
         this.taskId = taskId;
         this.taskTitle = taskTitle;
         this.creationDate = creationDate;

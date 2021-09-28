@@ -8,20 +8,17 @@ import java.util.List;
 
 public class TasksConverter {
 
-    //fixme у тебя тут обратная конвертация: taskToModel
-    public static TaskModel taskModelToTask (Task task) {
+    public static TaskModel taskToModel (Task task) {
         return new TaskModel(task.taskId, task.taskTitle, task.creationDate,
                 task.deadline, task.description, task.doneCheck);
 
     }
 
-    public static List<TaskModel> taskToTaskModel(List<Task> taskList){
+    public static List<TaskModel> taskListToTaskModelList(List<Task> taskList){
         List<TaskModel> taskListModel = new ArrayList<>();
         for (int i = 0; i < taskList.size(); i++) {
-            //fixme у тебя уже есть готовая функция taskToModel, вызывай ее в цикле
             Task task = taskList.get(i);
-            TaskModel taskModel = new TaskModel(task.taskId, task.taskTitle, task.creationDate,
-                    task.deadline, task.description, task.doneCheck);
+            TaskModel taskModel = TasksConverter.taskToModel(task);
             taskListModel.add(taskModel);
         }
         return taskListModel;
@@ -31,4 +28,6 @@ public class TasksConverter {
                 taskModel.getTaskCreationDate(), taskModel.getTaskDeadline(),
                 taskModel.getTaskDescription(), taskModel.getTaskStatus());
     }
+
+
 }

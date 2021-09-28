@@ -118,12 +118,10 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
         progressBar = view.findViewById(R.id.progressBarCreationTask);
         TaskModel chosenTaskModel = FragmentCreationTaskArgs.fromBundle(getArguments()).getChosenTask();
 
-        if (chosenTaskModel == null)
-        {
+        if (chosenTaskModel == null) {
             init();
         }
-        else
-        {
+        else {
             Task chosenTask = TasksConverter.toTask(chosenTaskModel);
             editTask(chosenTask);
         }
@@ -146,8 +144,7 @@ public class FragmentCreationTask extends Fragment implements TaskCreateView {
         date.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
-            public void onClick(View v) {
-                {
+            public void onClick(View v) { {
                     DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                             android.R.style.Theme_Holo_Light_Dialog_MinWidth, setListener, myYear, myMonth, myDay
                     );

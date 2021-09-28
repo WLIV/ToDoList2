@@ -20,8 +20,7 @@ public class TaskCreationPresenter {
     private Context context;
     private Database db;
     private Task chosenTask;
-    public TaskCreationPresenter(Context context)
-    {
+    public TaskCreationPresenter(Context context) {
         this.context = context;
         db = Database.getDbInstance(context);
     }

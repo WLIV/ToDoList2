@@ -36,6 +36,7 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
     private RecyclerView recyclerView;
     private Switch hideDoneSwitch;
     private ProgressBar progressBar;
+    private List<TaskModel> taskModels;
 
 
     private TasksListPresenter presenter;
@@ -58,7 +59,6 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
 
     @Override
     public void showList(List<TaskModel> tasks) {
-
         customAdapter.setTaskList(tasks);
 
     }
@@ -66,7 +66,6 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
     @Override
     public void setSortType( boolean hideDone) {
        hideDoneSwitch.setChecked(hideDone);
-       presenter.getList();
     }
 
     @Override
@@ -84,20 +83,21 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_main, container, false);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        customAdapter = new TaskListAdapter(getContext(), this);
-        recyclerView.setAdapter(customAdapter);
         progressBar = view.findViewById(R.id.progressBar);
         hideDoneSwitch = view.findViewById(R.id.hide_switch);
         spinnerSort = view.findViewById(R.id.spinner_sort);
         createNewTaskBtn = view.findViewById(R.id.create_new);
         presenter =  new TasksListPresenter(getContext());
         presenter.attachView(this);
+        customAdapter = new TaskListAdapter(getContext(), this);
         presenter.getList();
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setAdapter(customAdapter);
         init();
+
 
 
 
@@ -116,15 +116,13 @@ public class MainFragment extends Fragment implements TaskListAdapter.TaskListen
 
 
 
-    private void init()
-    {
+    private void init() {
 
 
         hideDoneSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 presenter.onHideCompletedTaskPressed(hideDoneSwitch.isChecked());
-                presenter.getList();
             }
         });
 

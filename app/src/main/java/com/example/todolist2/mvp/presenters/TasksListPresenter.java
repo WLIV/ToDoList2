@@ -1,6 +1,7 @@
 package com.example.todolist2.mvp.presenters;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.example.todolist2.convertors.TasksConverter;
 import com.example.todolist2.data.local.SharedPrefsHolder;
@@ -22,8 +23,7 @@ public class TasksListPresenter {
     public static final String POSITION = "position";
     public static final String SWITCH = "switch";
 
-    public TasksListPresenter(Context context)
-    {
+    public TasksListPresenter(Context context) {
         this.context = context;
         db = Database.getDbInstance(context);
         prefs = new SharedPrefsHolder(context);
@@ -41,47 +41,44 @@ public class TasksListPresenter {
         return prefs.getBoolean(SWITCH);
     }
 
-    public void savePosition(int position)
-    {
+    public void savePosition(int position) {
         prefs.setInt(POSITION, position);
     }
 
-    public void saveSwitch(boolean x)
-    {
+    public void saveSwitch(boolean x) {
         prefs.setBoolean(SWITCH, x);
     }
-    public void getList(){
-        view.showLoading();
-        view.showList(TasksConverter.taskToTaskModel(defineSort()));
-        view.hideLoading();
+    public void getList() {
+
+        new MyAsyncTask().execute();
     }
 
-    public void changeSort(Sort sort, boolean hideDone){
+    public void changeSort(Sort sort, boolean hideDone) {
         sortChoice = sort;
-        defineSort();
         view.setSortType( hideDone);
+        new MyAsyncTask().execute();
     }
 
-    public void onHideCompletedTaskPressed(boolean hideCompletedTasks){
+    public void onHideCompletedTaskPressed(boolean hideCompletedTasks) {
         prefs.setBoolean(SWITCH, hideCompletedTasks);
         hideDone = hideCompletedTasks;
         changeSort(sortChoice, hideCompletedTasks);
         saveSwitch(hideCompletedTasks);
         view.setCompletedTasks(hideCompletedTasks);
-        defineSort();
+        new MyAsyncTask().execute();
+
     }
 
-    public void attachView(TasksListView view){
+    public void attachView(TasksListView view) {
         this.view = view;
 
     }
 
-    public void detachView(){
+    public void detachView() {
         view = null;
     }
 
-    private List<Task> defineSort()
-    {
+    private List<Task> defineSort() {
         List<Task> taskList;
         switch (sortChoice) {
             default:
@@ -105,8 +102,7 @@ public class TasksListPresenter {
 
 
 
-    private List<Task> sortByTitle()
-    {
+    private List<Task> sortByTitle() {
         List<Task> taskList;
         if (!hideDone) {
 
@@ -122,8 +118,7 @@ public class TasksListPresenter {
 
     }
 
-    private List<Task> sortByDeadline()
-    {
+    private List<Task> sortByDeadline() {
         List<Task> taskList;
         if (!hideDone) {
 
@@ -138,8 +133,7 @@ public class TasksListPresenter {
         return taskList;
     }
 
-    private List<Task> sortByDone()
-    {
+    private List<Task> sortByDone() {
         List<Task> taskList;
         if (!hideDone) {
 
@@ -155,8 +149,7 @@ public class TasksListPresenter {
         return taskList;
 
     }
-    private List<Task> loadTaskList()
-    {
+    private List<Task> loadTaskList() {
         List<Task> taskList;
         if (!hideDone) {
             taskList = db.taskDao().getAll();
@@ -167,4 +160,26 @@ public class TasksListPresenter {
         }
         return taskList;
     }
+
+    class MyAsyncTask extends AsyncTask<Void, List<Task>, List<Task>> {
+
+        @Override
+        protected void onPreExecute() {
+            view.showLoading();
+        }
+
+        @Override
+        protected List<Task> doInBackground(Void... voids) {
+           List<Task> taskList = defineSort();
+            return taskList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Task> taskList) {
+            super.onPostExecute(taskList);
+            view.showList(TasksConverter.taskListToTaskModelList(taskList));
+            view.hideLoading();
+        }
+    }
 }
+
