@@ -21,9 +21,12 @@ public class TasksListPresenter {
     private SharedPrefsHolder prefs;
     public static final String POSITION = "position";
     public static final String SWITCH = "switch";
+    private MyAsyncTask getListTask;
 
     public TasksListPresenter(Context context) {
+
         this.context = context;
+        getListTask = new MyAsyncTask();
         db = Database.getDbInstance(context);
         prefs = new SharedPrefsHolder(context);
         hideDone = prefs.getBoolean(SWITCH);
@@ -48,14 +51,30 @@ public class TasksListPresenter {
         prefs.setBoolean(SWITCH, x);
     }
     public void getList() {
+        if (getListTask == null) {
+            getListTask = new MyAsyncTask();
+            getListTask.execute();
+            return;
+        } else if (getListTask.getStatus() == AsyncTask.Status.RUNNING) {
+            return;
+        } else {
+            getListTask.execute();
+        }
 
-        new MyAsyncTask().execute();
     }
 
     public void changeSort(Sort sort, boolean hideDone) {
         sortChoice = sort;
         view.setSortType( hideDone);
-        new MyAsyncTask().execute();
+        if (getListTask == null) {
+            getListTask = new MyAsyncTask();
+            getListTask.execute();
+            return;
+        } else if (getListTask.getStatus() == AsyncTask.Status.RUNNING) {
+            return;
+        } else {
+            getListTask.execute();
+        }
     }
 
     public void onHideCompletedTaskPressed(boolean hideCompletedTasks) {
@@ -64,8 +83,15 @@ public class TasksListPresenter {
         changeSort(sortChoice, hideCompletedTasks);
         saveSwitch(hideCompletedTasks);
         view.setCompletedTasks(hideCompletedTasks);
-        new MyAsyncTask().execute();
-
+        if (getListTask == null) {
+            getListTask = new MyAsyncTask();
+            getListTask.execute();
+            return;
+        } else if (getListTask.getStatus() == AsyncTask.Status.RUNNING) {
+            return;
+        } else {
+            getListTask.execute();
+        }
     }
 
     public void attachView(TasksListView view) {
@@ -160,9 +186,7 @@ public class TasksListPresenter {
         return taskList;
     }
 
-    //todo у тебя создается 3 разных объекта, которые стучатся в БД.
-    // В теории, они могут создаться одновременно и ты из 3 разных тасков будешь делать одно и то же.
-    // Подумай как исправить это и предложи решение
+
     class MyAsyncTask extends AsyncTask<Void, List<Task>, List<Task>> {
 
         @Override
@@ -181,6 +205,7 @@ public class TasksListPresenter {
             super.onPostExecute(taskList);
             view.showList(TasksConverter.taskListToTaskModelList(taskList));
             view.hideLoading();
+            getListTask = null;
         }
     }
 }
