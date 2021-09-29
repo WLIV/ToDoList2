@@ -8,7 +8,6 @@ import com.example.todolist2.data.local.SharedPrefsHolder;
 import com.example.todolist2.data.local.database.Database;
 import com.example.todolist2.data.local.database.entities.Task;
 import com.example.todolist2.features.taskList.data.Sort;
-import com.example.todolist2.features.taskList.data.TaskModel;
 import com.example.todolist2.mvp.mvmViews.TasksListView;
 
 import java.util.List;
@@ -161,6 +160,9 @@ public class TasksListPresenter {
         return taskList;
     }
 
+    //todo у тебя создается 3 разных объекта, которые стучатся в БД.
+    // В теории, они могут создаться одновременно и ты из 3 разных тасков будешь делать одно и то же.
+    // Подумай как исправить это и предложи решение
     class MyAsyncTask extends AsyncTask<Void, List<Task>, List<Task>> {
 
         @Override
