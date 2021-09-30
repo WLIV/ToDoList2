@@ -21,6 +21,7 @@ public class TasksListPresenter {
     private SharedPrefsHolder prefs;
     public static final String POSITION = "position";
     public static final String SWITCH = "switch";
+    //todo поля не называют с префиксом get
     private MyAsyncTask getListTask;
 
     public TasksListPresenter(Context context) {
@@ -51,21 +52,20 @@ public class TasksListPresenter {
         prefs.setBoolean(SWITCH, x);
     }
     public void getList() {
-        if (getListTask == null) {
-            getListTask = new MyAsyncTask();
-            getListTask.execute();
+
+        //todo вроде проще?
+        if (getListTask != null && getListTask.getStatus() == AsyncTask.Status.RUNNING)
             return;
-        } else if (getListTask.getStatus() == AsyncTask.Status.RUNNING) {
-            return;
-        } else {
-            getListTask.execute();
-        }
+
+        getListTask = new MyAsyncTask();
+        getListTask.execute();
 
     }
 
     public void changeSort(Sort sort, boolean hideDone) {
         sortChoice = sort;
         view.setSortType( hideDone);
+        //todo можно просто вызвать getList()
         if (getListTask == null) {
             getListTask = new MyAsyncTask();
             getListTask.execute();
@@ -83,6 +83,7 @@ public class TasksListPresenter {
         changeSort(sortChoice, hideCompletedTasks);
         saveSwitch(hideCompletedTasks);
         view.setCompletedTasks(hideCompletedTasks);
+        //todo можно просто вызвать getList()
         if (getListTask == null) {
             getListTask = new MyAsyncTask();
             getListTask.execute();
@@ -100,6 +101,7 @@ public class TasksListPresenter {
     }
 
     public void detachView() {
+        //todo подумай что здесь нужно сделать с таском?
         view = null;
     }
 
