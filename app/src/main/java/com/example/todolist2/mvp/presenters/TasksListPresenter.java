@@ -21,13 +21,12 @@ public class TasksListPresenter {
     private SharedPrefsHolder prefs;
     public static final String POSITION = "position";
     public static final String SWITCH = "switch";
-    //todo поля не называют с префиксом get
-    private MyAsyncTask getListTask;
+    private MyAsyncTask listTask;
 
     public TasksListPresenter(Context context) {
 
         this.context = context;
-        getListTask = new MyAsyncTask();
+        listTask = new MyAsyncTask();
         db = Database.getDbInstance(context);
         prefs = new SharedPrefsHolder(context);
         hideDone = prefs.getBoolean(SWITCH);
@@ -53,28 +52,18 @@ public class TasksListPresenter {
     }
     public void getList() {
 
-        //todo вроде проще?
-        if (getListTask != null && getListTask.getStatus() == AsyncTask.Status.RUNNING)
+        if (listTask != null && listTask.getStatus() == AsyncTask.Status.RUNNING)
             return;
 
-        getListTask = new MyAsyncTask();
-        getListTask.execute();
+        listTask = new MyAsyncTask();
+        listTask.execute();
 
     }
 
     public void changeSort(Sort sort, boolean hideDone) {
         sortChoice = sort;
         view.setSortType( hideDone);
-        //todo можно просто вызвать getList()
-        if (getListTask == null) {
-            getListTask = new MyAsyncTask();
-            getListTask.execute();
-            return;
-        } else if (getListTask.getStatus() == AsyncTask.Status.RUNNING) {
-            return;
-        } else {
-            getListTask.execute();
-        }
+        getList();
     }
 
     public void onHideCompletedTaskPressed(boolean hideCompletedTasks) {
@@ -83,16 +72,7 @@ public class TasksListPresenter {
         changeSort(sortChoice, hideCompletedTasks);
         saveSwitch(hideCompletedTasks);
         view.setCompletedTasks(hideCompletedTasks);
-        //todo можно просто вызвать getList()
-        if (getListTask == null) {
-            getListTask = new MyAsyncTask();
-            getListTask.execute();
-            return;
-        } else if (getListTask.getStatus() == AsyncTask.Status.RUNNING) {
-            return;
-        } else {
-            getListTask.execute();
-        }
+        getList();
     }
 
     public void attachView(TasksListView view) {
@@ -101,7 +81,7 @@ public class TasksListPresenter {
     }
 
     public void detachView() {
-        //todo подумай что здесь нужно сделать с таском?
+        listTask = null;
         view = null;
     }
 
@@ -207,7 +187,7 @@ public class TasksListPresenter {
             super.onPostExecute(taskList);
             view.showList(TasksConverter.taskListToTaskModelList(taskList));
             view.hideLoading();
-            getListTask = null;
+            listTask = null;
         }
     }
 }
