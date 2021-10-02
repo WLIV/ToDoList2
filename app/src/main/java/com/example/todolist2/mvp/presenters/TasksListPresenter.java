@@ -81,7 +81,10 @@ public class TasksListPresenter {
     }
 
     public void detachView() {
-        listTask = null;
+        if (listTask != null && listTask.getStatus() == AsyncTask.Status.RUNNING) {
+            listTask.cancel(true);
+        }
+
         view = null;
     }
 
